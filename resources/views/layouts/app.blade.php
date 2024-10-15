@@ -30,7 +30,47 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
+                         @auth
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    Conti
+                                </a>
 
+                                <div class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="">
+                                        Spendibili
+                                    </a>
+
+                                    <a class="dropdown-item" href="">
+                                        Risparmio
+                                    </a>
+
+                                    <a class="dropdown-item" href="">
+                                        Investimento
+                                    </a>
+
+                                    <a class="dropdown-item" href="">
+                                        Debito/Credito
+                                    </a>
+                                </div>
+                            </li>
+                            
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    Statistiche
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="">
+                                        Guadagno
+                                    </a>
+
+                                    <a class="dropdown-item" href="">
+                                        Spesa
+                                    </a>
+                                </div>
+                            </li>
+                        @endauth
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -76,5 +116,8 @@
             @yield('content')
         </main>
     </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
+
 </html>
