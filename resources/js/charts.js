@@ -1,3 +1,6 @@
+
+import Chart from 'chart.js/auto';
+
 // Grafico delle statistiche mensili
 var ctxMonthly = document.getElementById('monthlyStatsChart').getContext('2d');
 var monthlyStatsChart = new Chart(ctxMonthly, {

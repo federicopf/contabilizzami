@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <h4 class="mb-4">
                 Ciao {{ Auth::user()->name }}, ecco una panoramica delle tue finanze!
             </h4>
