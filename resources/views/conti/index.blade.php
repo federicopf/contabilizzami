@@ -8,10 +8,15 @@
                 <p class="text-muted">Visualizza e gestisci i tuoi conti</p>
             </div>
             <div class="col-md-3 text-end">
-                <button class="btn btn-primary">+ Aggiungi Conto</button>
+                <a href="{{ route('conti.create', $type) }}" class="btn btn-primary">+ Aggiungi Conto</a>
             </div>
         </div>
 
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
         <!-- Lista dei Conti -->
         <div class="row">
             <div class="col-12">
@@ -29,7 +34,7 @@
                             @foreach($accounts as $account)
                                 <tr onclick="window.location='{{ route('conti.show', $account->id) }}'" style="cursor: pointer;">
                                     <td>{{ $account->name }}</td>
-                                    <td class="d-none d-md-table-cell">{{ $account->type }}</td>
+                                    <td class="d-none d-md-table-cell">{{ $account->getTypeNameAttribute() }}</td>
                                     <td>€ {{ number_format($account->balance, 2, ',', '.') }}</td>
                                     <td class="d-none d-md-table-cell">{{ $account->created_at->format('Y-m-d') }}</td>
                                 </tr>

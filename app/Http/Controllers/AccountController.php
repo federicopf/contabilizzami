@@ -25,7 +25,8 @@ class AccountController extends Controller
         return view(
             'conti.index', 
             compact(
-                'accounts'
+                'accounts',
+                'type'
             )
         );
     }
@@ -33,9 +34,14 @@ class AccountController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($type)
     {
-        //
+        return view(
+            'conti.create',
+            compact(
+                'type'
+            )
+        );
     }
 
     /**
@@ -43,7 +49,19 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => 'required|integer|in:1,2,3,4,5', // Deve essere uno dei tipi definiti
+        ]);
+
+        Account::create($validated);
+
+        if($validated['type'] == 4 || $validated['type'] == 5){
+            $validated['type'] = 999;
+        }
+
+        return redirect()->route('conti.index', ['type' => $validated['type']])
+                         ->with('success', 'Conto creato con successo!');
     }
 
     /**
@@ -51,7 +69,7 @@ class AccountController extends Controller
      */
     public function show(Account $account)
     {
-        //
+        return view('conti.show', compact('account'));
     }
 
     /**
