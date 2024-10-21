@@ -37,19 +37,19 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('conti.index') }}">
+                                    <a class="dropdown-item" href="{{ route('conti.index', 1) }}">
                                         Spendibili
                                     </a>
 
-                                    <a class="dropdown-item" href="">
+                                    <a class="dropdown-item" href="{{ route('conti.index', 2) }}">
                                         Risparmio
                                     </a>
 
-                                    <a class="dropdown-item" href="">
+                                    <a class="dropdown-item" href="{{ route('conti.index', 3) }}">
                                         Investimento
                                     </a>
 
-                                    <a class="dropdown-item" href="">
+                                    <a class="dropdown-item" href="{{ route('conti.index', 999) }}">
                                         Debito/Credito
                                     </a>
                                 </div>

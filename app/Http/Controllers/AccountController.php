@@ -10,9 +10,24 @@ class AccountController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($type)
     {
-        return view('conti.index');
+
+        switch($type){
+            case "999" : 
+                $accounts = Account::where('type','=',4)->orWhere('type','=',5)->get();
+                break;
+            default : 
+                $accounts = Account::where('type','=',$type)->get();
+                break;
+        }
+        
+        return view(
+            'conti.index', 
+            compact(
+                'accounts'
+            )
+        );
     }
 
     /**
