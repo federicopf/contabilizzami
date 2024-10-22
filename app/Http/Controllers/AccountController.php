@@ -69,7 +69,13 @@ class AccountController extends Controller
      */
     public function show(Account $account)
     {
-        return view('conti.show', compact('account'));
+        $type = $account->type;
+        
+        if($account->type == 4 || $account->type == 5){
+            $type = 999;
+        }
+        
+        return view('conti.show', compact('account','type'));
     }
 
     /**
@@ -77,22 +83,40 @@ class AccountController extends Controller
      */
     public function edit(Account $account)
     {
-        //
+        return view('conti.edit', compact('account'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Account $account)
     {
-        //
+        // Valida i dati del form
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => 'required|integer|in:1,2,3,4,5',
+        ]);
+
+        // Aggiorna i dati del conto
+        $account->update($validated);
+
+        // Reindirizza alla pagina dei dettagli del conto con un messaggio di successo
+        return redirect()->route('conti.show', ['account' => $account->id])
+                        ->with('success', 'Conto aggiornato con successo!');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Account $account)
     {
-        //
+        // Elimina il conto (soft delete)
+        $account->delete();
+
+        // Reindirizza alla pagina principale dei conti con un messaggio di successo
+        return redirect()->route('conti.index', ['type' => $account->type])
+                         ->with('success', 'Conto eliminato con successo!');
     }
 }

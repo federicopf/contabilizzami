@@ -17,6 +17,8 @@ Route::prefix('conti')->as('conti.')->group(function () {
     Route::get('/{account}/modifica', [AccountController::class, 'edit'])->name('edit');
     Route::put('/{account}', [AccountController::class, 'update'])->name('update');
     Route::delete('/{account}', [AccountController::class, 'destroy'])->name('destroy');
+    
+    
 });
 
 Auth::routes(['register' => false]);

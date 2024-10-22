@@ -9,11 +9,29 @@
             <!-- Dettagli del Conto -->
             <div class="card mb-4">
                 <div class="card-body">
-                    <p><strong>Nome del Conto:</strong> Conto Corrente</p>
-                    <p><strong>Tipo di Conto:</strong> Spendibili</p>
-                    <p><strong>Saldo Attuale:</strong> € 2,500</p>
-                    <p><strong>Data di Creazione:</strong> 2023-10-16</p>
-                    <p><strong>Ultimo Aggiornamento:</strong> 2023-10-20</p>
+                    <p><strong>Nome del Conto:</strong> {{ $account->name }}</p>
+                    <p><strong>Tipo di Conto:</strong> 
+                        @switch($account->type)
+                            @case(1)
+                                Spendibili
+                                @break
+                            @case(2)
+                                Risparmio
+                                @break
+                            @case(3)
+                                Investimento
+                                @break
+                            @case(4)
+                                Debito
+                                @break
+                            @case(5)
+                                Credito
+                                @break
+                            @default
+                                Sconosciuto
+                        @endswitch
+                    </p>
+                    <p><strong>Saldo Attuale:</strong> € 2,500</p> <!-- Saldo hardcoded -->
 
                     <!-- Pulsanti di Modifica ed Eliminazione -->
                     <a href="{{ route('conti.edit', $account->id) }}" class="btn btn-warning">Modifica</a>
@@ -61,7 +79,7 @@
             </div>
 
             <!-- Pulsante per tornare indietro -->
-            <a href="{{ url()->previous() }}" class="btn btn-secondary mt-4">Indietro</a>
+            <a href="{{ route('conti.index',$type) }}" class="btn btn-secondary mt-4">Indietro</a>
         </div>
     </div>
 </div>
