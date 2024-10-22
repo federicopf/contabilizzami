@@ -11,6 +11,7 @@
                     {{ session('success') }}
                 </div>
             @endif
+
             <!-- Dettagli del Conto -->
             <div class="card mb-4">
                 <div class="card-body">
@@ -37,14 +38,26 @@
                         @endswitch
                     </p>
                     <p><strong>Saldo Attuale:</strong> € {{ number_format($account->transactions->sum('amount'), 2, ',', '.') }}</p>
+                    
+                    <!-- Dropdown per le azioni sul conto -->
+                    <div class="dropdown mb-4">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            Azioni Conto
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="">Crea Nuova Transazione</a></li>
+                            <li><a class="dropdown-item" href="">Crea Trasferimento</a></li>
 
-                    <!-- Pulsanti di Modifica ed Eliminazione -->
-                    <a href="{{ route('conti.edit', $account->id) }}" class="btn btn-warning">Modifica</a>
-                    <form action="{{ route('conti.destroy', $account->id ) }}" method="POST" style="display: inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Sei sicuro di voler eliminare questo conto?')">Elimina</button>
-                    </form>
+                            <li><a class="dropdown-item" href="{{ route('conti.edit', $account->id) }}">Modifica Conto</a></li>
+                            <li>
+                                <form action="{{ route('conti.destroy', $account->id ) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="dropdown-item" onclick="return confirm('Sei sicuro di voler eliminare questo conto?')">Elimina Conto</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
@@ -82,7 +95,6 @@
                     </div>
                 </div>
             </div>
-
 
             <!-- Pulsante per tornare indietro -->
             <a href="{{ route('conti.index',$type) }}" class="btn btn-secondary mt-4">Indietro</a>
