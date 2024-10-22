@@ -33,4 +33,10 @@ class Account extends Model
     {
         return self::TYPES[$this->type] ?? 'Sconosciuto';
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
 }

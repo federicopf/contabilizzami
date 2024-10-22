@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+
 use App\Models\Account;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
@@ -74,8 +77,30 @@ class AccountController extends Controller
         if($account->type == 4 || $account->type == 5){
             $type = 999;
         }
+
+        // Carica le transazioni con i conti collegati per identificare i trasferimenti
+        $account->load('transactions.account');
+
+        // Modifica ogni transazione per aggiungere una descrizione specifica in caso di trasferimento
+        $account->transactions->each(function ($transaction) {
+            // Cerca la transazione collegata direttamente nella tabella pivot
+            $linkedTransaction = DB::table('transaction_transfers')
+                ->where('transaction_id', $transaction->id)
+                ->orWhere('linked_transaction_id', $transaction->id)
+                ->first();
+
+            if ($linkedTransaction) {
+                $linkedTransactionModel = Transaction::find($linkedTransaction->transaction_id == $transaction->id ? $linkedTransaction->linked_transaction_id : $linkedTransaction->transaction_id);
+                
+                if ($transaction->amount < 0) {
+                    $transaction->description = 'Trasferimento da ' . $transaction->account->name . ' a ' . $linkedTransactionModel->account->name;
+                } else {
+                    $transaction->description = 'Ricezione da ' . $linkedTransactionModel->account->name . ' a ' . $transaction->account->name;
+                }
+            }
+        });
         
-        return view('conti.show', compact('account','type'));
+        return view('conti.show', compact('account', 'type'));
     }
 
     /**
