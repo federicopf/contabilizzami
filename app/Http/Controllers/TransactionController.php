@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use DB;
-
 use App\Models\Transaction;
 use App\Models\Account;
 use Illuminate\Http\Request;
@@ -18,6 +17,11 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
+        // Assicura che l'utente possa eliminare solo transazioni relative ai propri conti
+        if ($transaction->account->user_id !== auth()->id()) {
+            abort(403, 'Accesso negato');
+        }
+
         // Controlla se esiste una transazione collegata tramite la tabella pivot e cancellala
         $linkedTransactionId = DB::table('transaction_transfers')
             ->where('transaction_id', $transaction->id)
@@ -55,6 +59,12 @@ class TransactionController extends Controller
             'amount' => 'required|numeric',
         ]);
 
+        // Assicura che l'utente possa aggiungere transazioni solo ai propri conti
+        $account = Account::findOrFail($data['account_id']);
+        if ($account->user_id !== auth()->id()) {
+            abort(403, 'Accesso negato');
+        }
+
         // Crea la transazione
         Transaction::create($data);
 
@@ -77,9 +87,13 @@ class TransactionController extends Controller
             'amount' => 'required|numeric|min:0.01',
         ]);
 
-        // Recupera gli account coinvolti
+        // Recupera gli account coinvolti e assicura che appartengano all'utente
         $accountFrom = Account::findOrFail($data['account_from_id']);
         $accountTo = Account::findOrFail($data['account_to_id']);
+
+        if ($accountFrom->user_id !== auth()->id() || $accountTo->user_id !== auth()->id()) {
+            abort(403, 'Accesso negato');
+        }
 
         // Crea la transazione di uscita per l'account di origine
         $transactionFrom = Transaction::create([
@@ -96,7 +110,10 @@ class TransactionController extends Controller
         ]);
 
         // Collega le due transazioni come trasferimento
-        $transactionFrom->linkedTransactions()->attach($transactionTo->id);
+        DB::table('transaction_transfers')->insert([
+            'transaction_id' => $transactionFrom->id,
+            'linked_transaction_id' => $transactionTo->id,
+        ]);
 
         // Reindirizza alla pagina precedente con un messaggio di successo
         return redirect()->back()->with('success', 'Trasferimento creato con successo!');

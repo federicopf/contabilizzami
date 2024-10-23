@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use DB;
-
 use App\Models\Account;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -15,13 +14,17 @@ class AccountController extends Controller
      */
     public function index($type)
     {
-
         switch($type){
             case "999" : 
-                $accounts = Account::where('type','=',4)->orWhere('type','=',5)->get();
+                $accounts = Account::where('user_id', auth()->id())
+                    ->where(function($query) {
+                        $query->where('type', 4)->orWhere('type', 5);
+                    })->get();
                 break;
             default : 
-                $accounts = Account::where('type','=',$type)->get();
+                $accounts = Account::where('user_id', auth()->id())
+                    ->where('type', $type)
+                    ->get();
                 break;
         }
         
@@ -57,6 +60,7 @@ class AccountController extends Controller
             'type' => 'required|integer|in:1,2,3,4,5', // Deve essere uno dei tipi definiti
         ]);
 
+        $validated['user_id'] = auth()->id();
         Account::create($validated);
 
         if($validated['type'] == 4 || $validated['type'] == 5){
@@ -72,6 +76,11 @@ class AccountController extends Controller
      */
     public function show(Account $account)
     {
+        // Assicura che l'utente possa visualizzare solo i propri conti
+        if ($account->user_id !== auth()->id()) {
+            abort(403, 'Accesso negato');
+        }
+
         $type = $account->type;
         
         if($account->type == 4 || $account->type == 5){
@@ -100,7 +109,7 @@ class AccountController extends Controller
             }
         });
 
-        $accounts = Account::get();
+        $accounts = Account::where('user_id', auth()->id())->get();
         
         return view('conti.show', compact('account', 'type', 'accounts'));
     }
@@ -110,15 +119,24 @@ class AccountController extends Controller
      */
     public function edit(Account $account)
     {
+        // Assicura che l'utente possa modificare solo i propri conti
+        if ($account->user_id !== auth()->id()) {
+            abort(403, 'Accesso negato');
+        }
+
         return view('conti.edit', compact('account'));
     }
-
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Account $account)
     {
+        // Assicura che l'utente possa aggiornare solo i propri conti
+        if ($account->user_id !== auth()->id()) {
+            abort(403, 'Accesso negato');
+        }
+
         // Valida i dati del form
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -133,12 +151,16 @@ class AccountController extends Controller
                         ->with('success', 'Conto aggiornato con successo!');
     }
 
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Account $account)
     {
+        // Assicura che l'utente possa eliminare solo i propri conti
+        if ($account->user_id !== auth()->id()) {
+            abort(403, 'Accesso negato');
+        }
+
         // Elimina il conto (soft delete)
         $account->delete();
 
