@@ -99,8 +99,10 @@ class AccountController extends Controller
                 }
             }
         });
+
+        $accounts = Account::get();
         
-        return view('conti.show', compact('account', 'type'));
+        return view('conti.show', compact('account', 'type', 'accounts'));
     }
 
     /**

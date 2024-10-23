@@ -35,7 +35,7 @@
                                 <tr onclick="window.location='{{ route('conti.show', $account->id) }}'" style="cursor: pointer;">
                                     <td>{{ $account->name }}</td>
                                     <td class="d-none d-md-table-cell">{{ $account->getTypeNameAttribute() }}</td>
-                                    <td>€ {{ number_format($account->transactions->sum('amount'), 2, ',', '.') }}</td>
+                                    <td>{{ number_format($account->transactions->sum('amount'), 2, ',', '.') }}</td>
                                     <td class="d-none d-md-table-cell">{{ $account->created_at->format('Y-m-d') }}</td>
                                 </tr>
                             @endforeach

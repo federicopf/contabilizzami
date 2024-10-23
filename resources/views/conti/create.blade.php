@@ -18,12 +18,12 @@
                 <!-- Tipo di Conto -->
                 @if($type == 999)
                     <div class="mb-3">
-                    <label for="type" class="form-label">Tipo di Conto</label>
-                    <select class="form-select" id="type" name="type" required>
-                        <option value="">Seleziona tipo di conto</option>
-                        <option value="4">Debito</option>
-                        <option value="5">Credito</option>
-                    </select>
+                        <label for="type" class="form-label">Tipo di Conto</label>
+                        <select class="form-select" id="type" name="type" required>
+                            <option value="">Seleziona tipo di conto</option>
+                            <option value="4">Debito</option>
+                            <option value="5">Credito</option>
+                        </select>
                     </div>
                 @else
                     <input type="hidden" name="type" id="type" value="{{ $type }}">
