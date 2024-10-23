@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+
 use App\Models\Transaction;
 use App\Models\Account;
 use Illuminate\Http\Request;
@@ -16,6 +18,21 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
+        // Controlla se esiste una transazione collegata tramite la tabella pivot e cancellala
+        $linkedTransactionId = DB::table('transaction_transfers')
+            ->where('transaction_id', $transaction->id)
+            ->orWhere('linked_transaction_id', $transaction->id)
+            ->value('transaction_id') == $transaction->id
+            ? DB::table('transaction_transfers')->where('transaction_id', $transaction->id)->value('linked_transaction_id')
+            : DB::table('transaction_transfers')->where('linked_transaction_id', $transaction->id)->value('transaction_id');
+
+        if ($linkedTransactionId) {
+            $linkedTransaction = Transaction::find($linkedTransactionId);
+            if ($linkedTransaction) {
+                $linkedTransaction->delete();
+            }
+        }
+
         // Elimina la transazione
         $transaction->delete();
 
