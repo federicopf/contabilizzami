@@ -119,4 +119,6 @@
 
 </body>
 
+@vite('resources/js/jquery.js')
+
 </html>
