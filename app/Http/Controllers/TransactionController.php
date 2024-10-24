@@ -98,7 +98,7 @@ class TransactionController extends Controller
         // Crea la transazione di uscita per l'account di origine
         $transactionFrom = Transaction::create([
             'account_id' => $accountFrom->id,
-            'description' => 'Trasferimento a ' . $accountTo->name,
+            'description' => '',
             'amount' => -$data['amount'],
         ]);
 
@@ -118,4 +118,24 @@ class TransactionController extends Controller
         // Reindirizza alla pagina precedente con un messaggio di successo
         return redirect()->back()->with('success', 'Trasferimento creato con successo!');
     }
+
+    public function suggestions(Request $request)
+    {
+        // Valida l'input della query
+        $request->validate([
+            'query' => 'required|string|min:3',
+        ]);
+
+        // Cerca descrizioni che iniziano con il testo inserito dall'utente
+        $suggestions = Transaction::where('description', 'like', $request->query('query') . '%')
+                                ->pluck('description') // Ottieni solo le descrizioni
+                                ->unique() // Rimuovi duplicati
+                                ->take(3); // Limita i risultati a 5 suggerimenti
+
+        // Restituisci i suggerimenti come array JSON
+        return response()->json([
+            'suggestions' => $suggestions
+        ]);
+    }
+
 }

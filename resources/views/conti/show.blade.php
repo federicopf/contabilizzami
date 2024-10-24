@@ -102,6 +102,7 @@
 </div>
 
 <!-- Modal per Crea Nuova Transazione -->
+<!-- Modal per Crea Nuova Transazione -->
 <div class="modal fade" id="createTransactionModal" tabindex="-1" aria-labelledby="createTransactionModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -115,7 +116,9 @@
                     <input type="hidden" name="account_id" value="{{ $account->id }}">
                     <div class="mb-3">
                         <label for="description" class="form-label">Descrizione</label>
-                        <input type="text" class="form-control" id="description" name="description" required>
+                        <input type="text" class="form-control" id="description" name="description" required autocomplete="off">
+                        <!-- Div per visualizzare i suggerimenti -->
+                        <div id="descriptionSuggestions" class="list-group"></div>
                     </div>
                     <div class="mb-3">
                         <label for="amount" class="form-label">Importo</label>
@@ -160,4 +163,60 @@
         </div>
     </div>
 </div>
+
+<script type="module">
+    $(document).ready(function() {
+        let debounceTimer;
+
+        // Funzione per il debouncing
+        function debounce(callback, delay) {
+            return function() {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(callback, delay);
+            };
+        }
+
+        // Funzione per cercare i suggerimenti
+        function searchSuggestions() {
+            var description = $('#description').val();
+
+            if (description.length > 2) {
+                $.ajax({
+                    url: '{{ route("transactions.suggestions") }}',
+                    method: 'GET',
+                    data: {
+                        query: description
+                    },
+                    success: function(response) {
+                        $('#descriptionSuggestions').empty();
+
+                        if (response.suggestions.length > 0) {
+                            $.each(response.suggestions, function(index, suggestion) {
+                                $('#descriptionSuggestions').append(
+                                    '<button type="button" class="list-group-item list-group-item-action suggestion-item">' + suggestion + '</button>'
+                                );
+                            });
+                        } else {
+                            $('#descriptionSuggestions').append('<div class="list-group-item">Nessun suggerimento disponibile.</div>');
+                        }
+                    }
+                });
+            } else {
+                $('#descriptionSuggestions').empty();
+            }
+        }
+
+        // Associa la funzione di ricerca dei suggerimenti con debouncing all'input
+        $('#description').on('input', debounce(function() {
+            searchSuggestions();
+        }, 300)); // Ritarda di 300ms
+
+        // Event listener per quando si clicca su un suggerimento
+        $(document).on('click', '.suggestion-item', function() {
+            var selectedText = $(this).text();
+            $('#description').val(selectedText); // Imposta il testo selezionato nell'input
+            $('#descriptionSuggestions').empty(); // Nasconde i suggerimenti dopo la selezione
+        });
+    });
+</script>
 @endsection

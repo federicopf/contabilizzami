@@ -32,5 +32,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [TransactionController::class, 'store'])->name('store');
         Route::post('/transfer', [TransactionController::class, 'transfer'])->name('transfer');
         Route::delete('/{transaction}', [TransactionController::class, 'destroy'])->name('destroy');
+        Route::get('/suggestions', [TransactionController::class, 'suggestions'])->name('suggestions');
     });
 });
