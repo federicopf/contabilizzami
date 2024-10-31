@@ -12,6 +12,12 @@
                 </div>
             @endif
             
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    {{ $errors->first() }}
+                </div>
+            @endif
+            
             <!-- Dropdown per le azioni sul conto -->
             <div class="dropdown mb-4">
                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -35,27 +41,7 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <p><strong>Nome del Conto:</strong> {{ $account->name }}</p>
-                    <p><strong>Tipo di Conto:</strong> 
-                        @switch($account->type)
-                            @case(1)
-                                Spendibili
-                                @break
-                            @case(2)
-                                Risparmio
-                                @break
-                            @case(3)
-                                Investimento
-                                @break
-                            @case(4)
-                                Debito
-                                @break
-                            @case(5)
-                                Credito
-                                @break
-                            @default
-                                Sconosciuto
-                        @endswitch
-                    </p>
+                    <p><strong>Tipo di Conto:</strong>  {{ $account->getTypeNameAttribute() }}</p>
                     <p><strong>Saldo Attuale:</strong> {{ number_format($account->transactions->sum('amount'), 2, ',', '.') }}</p>
                 </div>
             </div>

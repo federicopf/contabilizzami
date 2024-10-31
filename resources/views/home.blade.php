@@ -17,7 +17,7 @@
             <div class="card text-white bg-primary mb-3">
                 <div class="card-body text-center">
                     <h5 class="card-title">Saldo Totale</h5>
-                    <h2>€ 12,500</h2> <!-- Placeholder per il saldo -->
+                    <h2>€ {{ number_format($totalBalance, 2, ',', '.') }}</h2>
                     <p class="card-text">La somma totale dei tuoi conti attivi.</p>
                 </div>
             </div>
@@ -29,18 +29,12 @@
                 <div class="card-body text-center">
                     <h5 class="card-title">Suddivisione per Tipologia</h5>
                     <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Conto Risparmio
-                            <span class="badge bg-primary rounded-pill">€ 7,500</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Conto Debito/Credito
-                            <span class="badge bg-secondary rounded-pill">€ 3,000</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Contanti
-                            <span class="badge bg-success rounded-pill">€ 2,000</span>
-                        </li>
+                        @foreach($accountTypes as $type => $balance)
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Conto {{ $type }}
+                                <span class="badge bg-primary rounded-pill">€ {{ number_format($balance, 2, ',', '.') }}</span>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -52,10 +46,13 @@
                 <div class="card-body text-center">
                     <h5 class="card-title">Transazioni Recenti</h5>
                     <ul class="list-group">
-                        <li class="list-group-item">- € 200 | Spesa Supermercato</li>
-                        <li class="list-group-item">+ € 500 | Stipendio</li>
-                        <li class="list-group-item">- € 100 | Bollette</li>
-                        <li class="list-group-item">+ € 1,000 | Freelance</li>
+                        @forelse($recentTransactions as $transaction)
+                            <li class="list-group-item">
+                                {{ $transaction->amount > 0 ? '+' : '-' }} € {{ number_format(abs($transaction->amount), 2, ',', '.') }} | {{ $transaction->description }}
+                            </li>
+                        @empty
+                            <li class="list-group-item">Nessuna transazione recente</li>
+                        @endforelse
                     </ul>
                 </div>
             </div>
@@ -69,7 +66,7 @@
             <div class="card bg-light mb-3">
                 <div class="card-body">
                     <h5 class="card-title text-center">Statistiche Mensili</h5>
-                    <canvas id="monthlyStatsChart"></canvas> <!-- Placeholder per grafico mensile -->
+                    <canvas id="monthlyStatsChart"></canvas>
                 </div>
             </div>
         </div>
@@ -79,7 +76,7 @@
             <div class="card bg-light mb-3">
                 <div class="card-body">
                     <h5 class="card-title text-center">Statistiche Annuali</h5>
-                    <canvas id="annualStatsChart"></canvas> <!-- Placeholder per grafico annuale -->
+                    <canvas id="annualStatsChart"></canvas>
                 </div>
             </div>
         </div>
@@ -109,5 +106,4 @@
 </div>
 
 @vite('resources/js/charts.js')
-
 @endsection

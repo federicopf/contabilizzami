@@ -19,6 +19,8 @@ Auth::routes(['register' => false]);
 //CONTI
 Route::middleware('auth')->group(function () {
     Route::prefix('conti')->as('conti.')->group(function () {
+        Route::get('/eliminati', [AccountController::class, 'deleted'])->name('deleted');
+        
         Route::get('/{type}', [AccountController::class, 'index'])->name('index');
         Route::get('/{type}/crea', [AccountController::class, 'create'])->name('create');
         Route::post('/aggiungi', [AccountController::class, 'store'])->name('store');
@@ -26,6 +28,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{account}/modifica', [AccountController::class, 'edit'])->name('edit');
         Route::put('/{account}', [AccountController::class, 'update'])->name('update');
         Route::delete('/{account}', [AccountController::class, 'destroy'])->name('destroy');
+        Route::patch('/{id}/restore', [AccountController::class, 'restore'])->name('restore');
     });
 
     Route::prefix('transactions')->as('transactions.')->group(function () {

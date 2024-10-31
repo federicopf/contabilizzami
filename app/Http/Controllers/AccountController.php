@@ -161,11 +161,43 @@ class AccountController extends Controller
             abort(403, 'Accesso negato');
         }
 
+        // Controlla se il saldo del conto è pari a zero
+        $balance = $account->transactions->sum('amount');
+        if ($balance != 0) {
+            return redirect()->back()->withErrors('Impossibile eliminare il conto. Prima devi azzerare il saldo.');
+        }
+
         // Elimina il conto (soft delete)
         $account->delete();
 
         // Reindirizza alla pagina principale dei conti con un messaggio di successo
         return redirect()->route('conti.index', ['type' => $account->type])
-                         ->with('success', 'Conto eliminato con successo!');
+                        ->with('success', 'Conto eliminato con successo!');
+    }
+
+    public function deleted()
+    {
+        // Recupera solo i conti eliminati (soft deleted) dell'utente corrente
+        $deletedAccounts = Account::onlyTrashed()->where('user_id', auth()->id())->get();
+
+        // Ritorna la vista con i conti eliminati
+        return view('conti.deleted', compact('deletedAccounts'));
+    }
+    
+    public function restore($id)
+    {
+        // Trova il conto eliminato tramite il soft delete
+        $account = Account::withTrashed()->findOrFail($id);
+
+        // Assicura che l'utente possa ripristinare solo i propri conti
+        if ($account->user_id !== auth()->id()) {
+            abort(403, 'Accesso negato');
+        }
+
+        // Ripristina il conto
+        $account->restore();
+
+        return redirect()->route('conti.deleted')
+                        ->with('success', 'Conto ripristinato con successo!');
     }
 }

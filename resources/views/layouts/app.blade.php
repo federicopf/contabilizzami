@@ -52,6 +52,10 @@
                                     <a class="dropdown-item" href="{{ route('conti.index', 999) }}">
                                         Debito/Credito
                                     </a>
+
+                                    <a class="dropdown-item" href="{{ route('conti.deleted') }}">
+                                        Cancellati
+                                    </a>
                                 </div>
                             </li>
                             
