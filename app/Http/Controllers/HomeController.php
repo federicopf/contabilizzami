@@ -35,12 +35,19 @@ class HomeController extends Controller
             return $account->transactions->sum('amount');
         });
 
-        // Suddivisione per tipologia
-        $accountTypes = [
-            'Risparmio' => $accounts->where('type', 'Risparmio')->sum(fn($account) => $account->transactions->sum('amount')),
-            'Debito/Credito' => $accounts->where('type', 'Debito/Credito')->sum(fn($account) => $account->transactions->sum('amount')),
-            'Contanti' => $accounts->where('type', 'Contanti')->sum(fn($account) => $account->transactions->sum('amount')),
-        ];
+        $debitoCreditoBalance = 0;
+        foreach (Account::TYPES as $typeId => $typeName) {
+            $balance = $accounts->where('type', $typeId)->sum(fn($account) => $account->transactions->sum('amount'));
+
+            if ($typeName === 'Debito' || $typeName === 'Credito') {
+                $debitoCreditoBalance += $balance; // Somma Debito e Credito
+            } else {
+                $accountTypes[$typeName] = $balance; // Altri tipi vengono aggiunti normalmente
+            }
+        }
+
+        // Aggiungi il saldo combinato di Debito/Credito con un'etichetta
+        $accountTypes['Debito/Credito'] = $debitoCreditoBalance;
 
         // Recupera le ultime 5 transazioni
         $recentTransactions = auth()->user()->transactions()->orderBy('created_at', 'desc')->take(5)->get();
@@ -48,7 +55,8 @@ class HomeController extends Controller
 
         // Modifica ogni transazione per aggiungere una descrizione specifica in caso di trasferimento
         $recentTransactions->each(function ($transaction) {
-            // Cerca la transazione collegata direttamente nella tabella pivot
+            $transaction->linked = 0;
+
             $linkedTransaction = DB::table('transaction_transfers')
                 ->where('transaction_id', $transaction->id)
                 ->orWhere('linked_transaction_id', $transaction->id)
@@ -56,7 +64,8 @@ class HomeController extends Controller
 
             if ($linkedTransaction) {
                 $linkedTransactionModel = Transaction::find($linkedTransaction->transaction_id == $transaction->id ? $linkedTransaction->linked_transaction_id : $linkedTransaction->transaction_id);
-                
+                $transaction->linked = 1;
+
                 if ($transaction->amount < 0) {
                     $transaction->description = 'Trasferimento da ' . $transaction->account->name . ' a ' . $linkedTransactionModel->account->name;
                 } else {

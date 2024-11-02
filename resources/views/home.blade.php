@@ -48,7 +48,12 @@
                     <ul class="list-group">
                         @forelse($recentTransactions as $transaction)
                             <li class="list-group-item">
-                                {{ $transaction->amount > 0 ? '+' : '-' }} € {{ number_format(abs($transaction->amount), 2, ',', '.') }} | {{ $transaction->description }}
+                                {{ $transaction->amount > 0 ? '+' : '-' }} € {{ number_format(abs($transaction->amount), 2, ',', '.') }} 
+                                | {{ $transaction->description }}
+                                
+                                @if(!$transaction->linked)
+                                | {{ $transaction->account->name }}
+                                @endif
                             </li>
                         @empty
                             <li class="list-group-item">Nessuna transazione recente</li>
