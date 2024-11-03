@@ -50,7 +50,7 @@ class HomeController extends Controller
         $accountTypes['Debito/Credito'] = $debitoCreditoBalance;
 
         // Recupera le ultime 5 transazioni
-        $recentTransactions = auth()->user()->transactions()->orderBy('created_at', 'desc')->take(5)->get();
+        $recentTransactions = auth()->user()->transactions()->orderBy('created_at', 'desc')->take(3)->get();
 
 
         // Modifica ogni transazione per aggiungere una descrizione specifica in caso di trasferimento

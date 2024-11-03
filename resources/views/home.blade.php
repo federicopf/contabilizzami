@@ -87,7 +87,7 @@
         </div>
     </div>
 
-    <!-- Sezione Obiettivi Finanziari (Opzionale) -->
+    <!-- Sezione Obiettivi Finanziari (Opzionale) 
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card bg-light mb-3">
@@ -107,6 +107,7 @@
             </div>
         </div>
     </div>
+    -->
 
 </div>
 
