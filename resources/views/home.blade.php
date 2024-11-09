@@ -70,7 +70,17 @@
         <div class="col-md-6">
             <div class="card bg-light mb-3">
                 <div class="card-body">
-                    <h5 class="card-title text-center">Statistiche Mensili</h5>
+                    <h5 class="card-title text-center">
+                        <button id="prevYear" class="btn btn-link" onclick="changeYear(-1)">
+                            <i class="bi bi-arrow-left-circle"></i> <!-- Freccia sinistra -->
+                        </button>
+        
+                        <span id="currentYear">2024</span> <!-- Mostra l'anno corrente -->
+        
+                        <button id="nextYear" class="btn btn-link" onclick="changeYear(1)">
+                            <i class="bi bi-arrow-right-circle"></i> <!-- Freccia destra -->
+                        </button>
+                    </h5>
                     <canvas id="monthlyStatsChart"></canvas>
                 </div>
             </div>
@@ -112,4 +122,40 @@
 </div>
 
 @vite('resources/js/charts.js')
+
+
+<script>
+    // Variabile per tenere traccia dell'anno corrente
+    let currentYear = new Date().getFullYear();
+
+    // Funzione per aggiornare l'anno e il grafico
+    function changeYear(direction) {
+        // Aggiorna l'anno corrente
+        currentYear += direction;
+        
+        // Mostra l'anno aggiornato nell'elemento HTML
+        document.getElementById('currentYear').textContent = currentYear;
+        
+        // Funzione per aggiornare i dati del grafico (da implementare in charts.js)
+        updateMonthlyStatsChart(currentYear);
+    }
+
+    // Funzione per caricare i dati del grafico in base all'anno
+    function updateMonthlyStatsChart(year) {
+        // Qui puoi aggiungere una chiamata AJAX per recuperare i dati dell'anno specificato
+        // E aggiornare il grafico
+        // Esempio:
+        /*
+        $.ajax({
+            url: '/api/stats/monthly',
+            data: { year: year },
+            success: function(data) {
+                // Supponendo che `data` sia il formato corretto per aggiornare il grafico
+                monthlyStatsChart.data.datasets[0].data = data;
+                monthlyStatsChart.update();
+            }
+        });
+        */
+    }
+</script>
 @endsection
