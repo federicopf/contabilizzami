@@ -125,18 +125,15 @@
 
 
 <script>
-    // Variabile per tenere traccia dell'anno corrente
+
     let currentYear = new Date().getFullYear();
 
-    // Funzione per aggiornare l'anno e il grafico
+    
     function changeYear(direction) {
-        // Aggiorna l'anno corrente
         currentYear += direction;
         
-        // Mostra l'anno aggiornato nell'elemento HTML
         document.getElementById('currentYear').textContent = currentYear;
         
-        // Funzione per aggiornare i dati del grafico (da implementare in charts.js)
         updateMonthlyStatsChart(currentYear);
     }
 
