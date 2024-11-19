@@ -1,0 +1,31 @@
+pipelines:
+  default:
+    - step:
+        name: "Deploy to AWS EC2 with Laravel commands"
+        image: php:8.1-cli # Ambiente con PHP preinstallato
+        caches:
+          - composer
+        script:
+          # Install SSH client
+          - apt-get update && apt-get install -y openssh-client unzip
+          
+          # Setup SSH key
+          - mkdir -p ~/.ssh
+          - echo "$EC2_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          - chmod 600 ~/.ssh/id_rsa
+          
+          # Add EC2 to known hosts
+          - ssh-keyscan -t rsa $EC2_HOST >> ~/.ssh/known_hosts
+          
+          # Transfer files to EC2
+          - scp -r $LOCAL_PATH ec2-user@$EC2_HOST:$REMOTE_PATH
+          
+          # Execute Laravel commands on EC2
+          - ssh ec2-user@$EC2_HOST << EOF
+              cd $REMOTE_PATH
+              composer install --no-dev --optimize-autoloader
+              php artisan cache:clear
+              php artisan config:clear
+              php artisan migrate --force
+              sudo systemctl restart $SERVICE_NAME
+            EOF
