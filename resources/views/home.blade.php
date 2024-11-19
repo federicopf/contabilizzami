@@ -71,13 +71,13 @@
             <div class="card bg-light mb-3">
                 <div class="card-body">
                     <h5 class="card-title text-center">
-                        <button id="prevYear" class="btn btn-link" onclick="changeYear(-1)">
+                        <button id="prevYear" class="btn btn-link">
                             <i class="bi bi-arrow-left-circle"></i> <!-- Freccia sinistra -->
                         </button>
         
                         <span id="currentYear">2024</span> <!-- Mostra l'anno corrente -->
         
-                        <button id="nextYear" class="btn btn-link" onclick="changeYear(1)">
+                        <button id="nextYear" class="btn btn-link">
                             <i class="bi bi-arrow-right-circle"></i> <!-- Freccia destra -->
                         </button>
                     </h5>
@@ -97,62 +97,63 @@
         </div>
     </div>
 
-    <!-- Sezione Obiettivi Finanziari (Opzionale) 
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card bg-light mb-3">
-                <div class="card-body">
-                    <h5 class="card-title text-center">Obiettivi Finanziari</h5>
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Raggiungi un saldo di €10,000 nel conto risparmio
-                            <span class="badge bg-warning rounded-pill">75% Completo</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Ripaga il debito di €3,000
-                            <span class="badge bg-success rounded-pill">50% Completo</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    -->
-
 </div>
 
-@vite('resources/js/charts.js')
+@vite('resources/js/charts/home.js')
 
-
-<script>
+<script type="module">
 
     let currentYear = new Date().getFullYear();
+    $(document).ready(function () {
+        //ON LAUNCH
+        changeYear(0);
 
-    
-    function changeYear(direction) {
-        currentYear += direction;
-        
-        document.getElementById('currentYear').textContent = currentYear;
-        
-        updateMonthlyStatsChart(currentYear);
-    }
+        //BINDIGS 
+        $('#currentYear').text(currentYear);
 
-    // Funzione per caricare i dati del grafico in base all'anno
-    function updateMonthlyStatsChart(year) {
-        // Qui puoi aggiungere una chiamata AJAX per recuperare i dati dell'anno specificato
-        // E aggiornare il grafico
-        // Esempio:
-        /*
-        $.ajax({
-            url: '/api/stats/monthly',
-            data: { year: year },
-            success: function(data) {
-                // Supponendo che `data` sia il formato corretto per aggiornare il grafico
-                monthlyStatsChart.data.datasets[0].data = data;
-                monthlyStatsChart.update();
-            }
+        $('#prevYear').click(function () {
+            changeYear(-1);
         });
-        */
-    }
+
+        $('#nextYear').click(function () {
+            changeYear(1);
+        });
+
+        //FUNCTIONS
+        function changeYear(direction) {
+            currentYear += direction;
+            $('#currentYear').text(currentYear);
+
+            updateMonthlyStatsChart(currentYear);
+        }
+
+        function updateMonthlyStatsChart(year) {
+            const newData = {
+                2023: {
+                    entrate: [1000, 1100, 1500, 1200, 1600, 2000, 2100, 2200, 2000, 1900, 2500, 2400],
+                    uscite: [800, 850, 700, 900, 1000, 1300, 1400, 1100, 1200, 1250, 1100, 1200]
+                },
+                2024: {
+                    entrate: [1200, 1500, 1700, 1300, 1900, 2200, 2100, 1800, 2000, 1900, 2400, 2300],
+                    uscite: [900, 1000, 800, 1200, 1300, 1400, 1100, 950, 1200, 1300, 1000, 1050]
+                }
+            };
+
+            if (newData[year]) {
+                const chart = window.monthlyStatsChart;
+
+                if (chart) {
+                    chart.data.datasets[0].data = newData[year].entrate;
+                    chart.data.datasets[1].data = newData[year].uscite;
+                    chart.update();
+                } else {
+                    console.error('Il grafico non è stato inizializzato.');
+                }
+            } else {
+                console.error(`Nessun dato trovato per l'anno ${year}`);
+            }
+        }
+    });
+    
 </script>
 @endsection
