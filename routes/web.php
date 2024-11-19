@@ -39,5 +39,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/suggestions', [TransactionController::class, 'suggestions'])->name('suggestions');
     });
 
-    Route::get('/stats/{year}', [StatsController::class, 'getStats']);
+    Route::prefix('api')->as('api.')->group(function () {
+        Route::get('/stats/{year}', [StatsController::class, 'getStats'])->name('getStats');
+    });
 });
