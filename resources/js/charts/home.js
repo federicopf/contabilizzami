@@ -29,8 +29,8 @@ window.monthlyStatsChart = new Chart(ctxMonthly, {
 
 
 // Grafico delle statistiche annuali
-var ctxAnnual = document.getElementById('annualStatsChart').getContext('2d');
-var annualStatsChart = new Chart(ctxAnnual, {
+var ctxAnnual = document.getElementById('yearlyStatsChart').getContext('2d');
+window.yearlyStatsChart = new Chart(ctxAnnual, {
     type: 'bar',
     data: {
         labels: ['2020', '2021', '2022', '2023', '2024'],

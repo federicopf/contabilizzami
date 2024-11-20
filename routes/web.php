@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('api')->as('api.')->group(function () {
-        Route::get('/stats/{year}', [StatsController::class, 'getStats'])->name('getStats');
+        Route::get('/stats/monthly/{year}', [StatsController::class, 'getStatsMonthly'])->name('getStatsMonthly');
+        Route::get('/stats/yearly', [StatsController::class, 'getStatsYearly'])->name('getStatsYearly');
     });
 });

@@ -91,7 +91,7 @@
             <div class="card bg-light mb-3">
                 <div class="card-body">
                     <h5 class="card-title text-center">Statistiche Annuali</h5>
-                    <canvas id="annualStatsChart"></canvas>
+                    <canvas id="yearlyStatsChart"></canvas>
                 </div>
             </div>
         </div>
@@ -106,21 +106,30 @@
     let currentYear = new Date().getFullYear();
     $(document).ready(function () {
         //ON LAUNCH
-        changeYear(0);
+        initMonthlyStats();
+        initYearlyStats();
 
         //BINDIGS 
         $('#currentYear').text(currentYear);
 
         $('#prevYear').click(function () {
-            changeYear(-1);
+            changeYearMonthlyStatsChart(-1);
         });
 
         $('#nextYear').click(function () {
-            changeYear(1);
+            changeYearMonthlyStatsChart(1);
         });
 
         //FUNCTIONS
-        function changeYear(direction) {
+        function initYearlyStats(){
+            updateYearlyStatsChart();
+        }
+
+        function initMonthlyStats(){
+            changeYearMonthlyStatsChart(0);
+        }
+
+        function changeYearMonthlyStatsChart(direction) {
             currentYear += direction;
             $('#currentYear').text(currentYear);
 
@@ -129,13 +138,34 @@
 
         function updateMonthlyStatsChart(year) {
             $.ajax({
-                url: `/api/stats/${year}`,
+                url: `/api/stats/monthly/${year}`,
                 method: 'GET',
                 success: function (response) {
                     // Aggiorna i dati del grafico
                     const chart = window.monthlyStatsChart;
 
                     if (chart) {
+                        chart.data.datasets[0].data = response.entrate;
+                        chart.data.datasets[1].data = response.uscite;
+                        chart.update();
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Errore nel recupero dei dati:', xhr.responseJSON?.error || xhr.statusText);
+                }
+            });
+        }
+
+        function updateYearlyStatsChart() {
+            $.ajax({
+                url: `/api/stats/yearly`,
+                method: 'GET',
+                success: function (response) {
+                    // Aggiorna i dati del grafico
+                    const chart = window.yearlyStatsChart;
+
+                    if (chart) {
+                        console.log(response);
                         chart.data.datasets[0].data = response.entrate;
                         chart.data.datasets[1].data = response.uscite;
                         chart.update();
