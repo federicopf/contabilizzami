@@ -165,7 +165,6 @@
                     const chart = window.yearlyStatsChart;
 
                     if (chart) {
-                        console.log(response);
                         chart.data.datasets[0].data = response.entrate;
                         chart.data.datasets[1].data = response.uscite;
                         chart.update();

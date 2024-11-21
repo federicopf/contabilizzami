@@ -36,11 +36,11 @@ window.yearlyStatsChart = new Chart(ctxAnnual, {
         labels: ['2020', '2021', '2022', '2023', '2024'],
         datasets: [{
             label: 'Entrate',
-            data: [15000, 18000, 17000, 19000, 22000],
+            data: [0, 0, 0, 0, 0],
             backgroundColor: 'rgba(75, 192, 192, 0.6)',
         }, {
             label: 'Uscite',
-            data: [12000, 14000, 13000, 15000, 16000],
+            data: [0, 0, 0, 0, 0],
             backgroundColor: 'rgba(255, 99, 132, 0.6)',
         }]
     },
