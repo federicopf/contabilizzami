@@ -67,7 +67,7 @@ class StatsController extends Controller
             GROUP BY YEAR(t.created_at)
             ORDER BY YEAR(t.created_at)
         ";
-
+    
         // Esegui la query
         $transactions = DB::select($query);
 
