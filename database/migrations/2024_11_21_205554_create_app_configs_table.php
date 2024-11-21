@@ -12,7 +12,7 @@ class CreateAppConfigTable extends Migration
      */
     public function up()
     {
-        Schema::create('app_config', function (Blueprint $table) {
+        Schema::create('app_configs', function (Blueprint $table) {
             $table->id(); // Chiave primaria
             $table->string('key')->unique(); // Chiave della configurazione, unica
             $table->text('value')->nullable(); // Valore della configurazione

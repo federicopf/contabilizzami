@@ -9,9 +9,6 @@ class AppConfig extends Model
 {
     use HasFactory;
 
-    // Nome della tabella (opzionale, solo se diverso dal plurale del modello)
-    protected $table = 'app_config';
-
     // Campi assegnabili in massa
     protected $fillable = ['key', 'value'];
 
