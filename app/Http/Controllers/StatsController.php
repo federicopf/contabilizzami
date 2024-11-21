@@ -77,6 +77,10 @@ class StatsController extends Controller
             'uscite' => [],
         ];
 
+        if(empty($transactions)){
+            return response()->json($stats);
+        }
+
         // Popola i dati per ogni anno
         foreach ($transactions as $transaction) {
             $yearIndex = $transaction->year; // Usa l'anno come indice
