@@ -14,7 +14,7 @@
     <div class="row justify-content-center mb-4">
         <!-- Saldo totale -->
         <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3">
+            <div class="card text-white {{ $totalBalance < 0 ? 'bg-danger' : 'bg-primary' }} mb-3">
                 <div class="card-body text-center">
                     <h5 class="card-title">Saldo Totale</h5>
                     <h2>€ {{ number_format($totalBalance, 2, ',', '.') }}</h2>
@@ -30,10 +30,10 @@
                     <h5 class="card-title">Suddivisione per Tipologia</h5>
                     <ul class="list-group">
                         @foreach($accountTypes as $type => $balance)
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ route('conti.index', array_search($type, App\Models\Account::TYPES)) }}" class="list-group-item d-flex justify-content-between align-items-center">
                                 Conto {{ $type }}
-                                <span class="badge bg-primary rounded-pill">€ {{ number_format($balance, 2, ',', '.') }}</span>
-                            </li>
+                                <span style="background: {{App\Models\AppConfig::getValue("account_color_" . $type)}}" class="badge rounded-pill">€ {{ number_format($balance, 2, ',', '.') }}</span>
+                            </a>
                         @endforeach
                     </ul>
                 </div>

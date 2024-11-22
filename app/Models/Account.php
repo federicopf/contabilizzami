@@ -21,7 +21,8 @@ class Account extends Model
         2 => 'Risparmio',
         3 => 'Investimento',
         4 => 'Debito',
-        5 => 'Credito'
+        5 => 'Credito',
+        999 => 'Debito/Credito'
     ];
 
     /**

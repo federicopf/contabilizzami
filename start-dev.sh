@@ -1,16 +1,19 @@
 #!/bin/bash
 
-# Avvia il daemon Docker in primo piano
-echo "Starting Docker daemon in the foreground..."
-dockerd &
-DOCKER_PID=$!
+if ! pgrep -x "dockerd" > /dev/null; then
+    echo "Starting Docker daemon in the foreground..."
+    dockerd &
+    DOCKER_PID=$!
 
-# Attendi che Docker sia completamente avviato
-echo "Waiting for Docker to start..."
-while ! docker info > /dev/null 2>&1; do
-    sleep 1
-done
-echo "Docker is running."
+    # Attendi che Docker sia completamente avviato
+    echo "Waiting for Docker to start..."
+    while ! docker info > /dev/null 2>&1; do
+        sleep 1
+    done
+    echo "Docker is running."
+else
+    echo "Docker daemon is already running."
+fi
 
 # Avvia Docker Compose in modalità non detached
 echo "Starting Docker Compose..."
