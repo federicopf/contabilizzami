@@ -17,6 +17,7 @@ fi
 
 # Avvia Docker Compose in modalità non detached
 echo "Starting Docker Compose..."
+docker compose down
 docker compose up -d
 
 echo "Starting npm..."
