@@ -13,6 +13,7 @@ class Account extends Model
     protected $fillable = [
         'name',
         'type',
+        'user_id'
     ];
 
     // Mappatura dei tipi di conto

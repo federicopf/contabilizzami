@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 
 class StatsController extends Controller
 {
+    public function generic(){
+
+    }
+    
     public function getStatsMonthly($year)
     {
         // Query SQL per calcolare entrate e uscite mensili escludendo le transazioni interne
