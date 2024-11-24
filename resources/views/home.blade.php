@@ -32,7 +32,7 @@
                         @foreach($accountTypes as $type => $balance)
                             <a href="{{ route('conti.index', array_search($type, App\Models\Account::TYPES)) }}" class="list-group-item d-flex justify-content-between align-items-center">
                                 Conto {{ $type }}
-                                <span style="background: {{App\Models\AppConfig::getValue("account_color_" . $type)}}" class="badge rounded-pill">€ {{ number_format($balance, 2, ',', '.') }}</span>
+                                <span class="badge bg-primary rounded-pill">€ {{ number_format($balance, 2, ',', '.') }}</span>
                             </a>
                         @endforeach
                     </ul>

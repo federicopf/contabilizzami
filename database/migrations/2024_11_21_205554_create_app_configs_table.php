@@ -1,9 +1,10 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAppConfigTable extends Migration
+class CreateAppConfigsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +15,8 @@ class CreateAppConfigTable extends Migration
     {
         Schema::create('app_configs', function (Blueprint $table) {
             $table->id(); // Chiave primaria
-            $table->string('key')->unique(); // Chiave della configurazione, unica
+            $table->unsignedBigInteger('user_id')->default(0); // ID utente o 0 per configurazioni generali
+            $table->string('key'); // Chiave della configurazione, unica
             $table->text('value')->nullable(); // Valore della configurazione
             $table->timestamps(); // Created at e Updated at
         });
@@ -27,6 +29,6 @@ class CreateAppConfigTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('app_config');
+        Schema::dropIfExists('app_configs'); // Nome corretto della tabella
     }
 }
