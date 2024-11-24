@@ -68,11 +68,7 @@
 
                                 <div class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="">
-                                        Guadagno
-                                    </a>
-
-                                    <a class="dropdown-item" href="">
-                                        Spesa
+                                        Generiche
                                     </a>
                                 </div>
                             </li>
