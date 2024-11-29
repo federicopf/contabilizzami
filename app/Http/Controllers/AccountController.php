@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use DB;
 use App\Models\Account;
 use App\Models\Transaction;
+use App\Models\TransactionTransfer;
+
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
@@ -93,8 +95,7 @@ class AccountController extends Controller
         // Modifica ogni transazione per aggiungere una descrizione specifica in caso di trasferimento
         $account->transactions->each(function ($transaction) {
             // Cerca la transazione collegata direttamente nella tabella pivot
-            $linkedTransaction = DB::table('transaction_transfers')
-                ->where('transaction_id', $transaction->id)
+            $linkedTransaction = TransactionTransfer::where('transaction_id', $transaction->id)
                 ->orWhere('linked_transaction_id', $transaction->id)
                 ->first();
 

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use DB;
-use App\Models\Transaction;
+
 use App\Models\Account;
+use App\Models\Transaction;
+use App\Models\TransactionTransfer;
 
 use Illuminate\Http\Request;
 
@@ -57,8 +59,7 @@ class HomeController extends Controller
         $recentTransactions->each(function ($transaction) {
             $transaction->linked = 0;
 
-            $linkedTransaction = DB::table('transaction_transfers')
-                ->where('transaction_id', $transaction->id)
+            $linkedTransaction = TransactionTransfer::where('transaction_id', $transaction->id)
                 ->orWhere('linked_transaction_id', $transaction->id)
                 ->first();
 

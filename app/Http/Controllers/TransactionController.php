@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use DB;
-use App\Models\Transaction;
+
 use App\Models\Account;
+use App\Models\Transaction;
+use App\Models\TransactionTransfer;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
@@ -23,12 +25,11 @@ class TransactionController extends Controller
         }
 
         // Controlla se esiste una transazione collegata tramite la tabella pivot e cancellala
-        $linkedTransactionId = DB::table('transaction_transfers')
-            ->where('transaction_id', $transaction->id)
+        $linkedTransactionId = TransactionTransfer::where('transaction_id', $transaction->id)
             ->orWhere('linked_transaction_id', $transaction->id)
             ->value('transaction_id') == $transaction->id
-            ? DB::table('transaction_transfers')->where('transaction_id', $transaction->id)->value('linked_transaction_id')
-            : DB::table('transaction_transfers')->where('linked_transaction_id', $transaction->id)->value('transaction_id');
+            ? TransactionTransfer::where('transaction_id', $transaction->id)->value('linked_transaction_id')
+            : TransactionTransfer::where('linked_transaction_id', $transaction->id)->value('transaction_id');
 
         if ($linkedTransactionId) {
             $linkedTransaction = Transaction::find($linkedTransactionId);
@@ -110,7 +111,7 @@ class TransactionController extends Controller
         ]);
 
         // Collega le due transazioni come trasferimento
-        DB::table('transaction_transfers')->insert([
+        TransactionTransfer::insert([
             'transaction_id' => $transactionFrom->id,
             'linked_transaction_id' => $transactionTo->id,
         ]);

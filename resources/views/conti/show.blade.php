@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <h2 class="mb-4">Dettagli del Conto</h2>
+            <h2 class="mb-4 mt-4">Dettagli del Conto</h2>
             
             @if(session('success'))
                 <div class="alert alert-success">
@@ -20,9 +20,7 @@
             
             <!-- Dropdown per le azioni sul conto -->
             <div class="dropdown mb-4">
-                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                    Azioni Conto
-                </button>
+                <a href="{{ route('conti.index',$type) }}" class="btn btn-secondary mt-2">Indietro</a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#createTransactionModal">Crea Nuova Transazione</a></li>
                     <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#createTransferModal">Crea Trasferimento</a></li>
@@ -44,6 +42,10 @@
                     <p><strong>Tipo di Conto:</strong>  {{ $account->getTypeNameAttribute() }}</p>
                     <p><strong>Saldo Attuale:</strong> {{ number_format($account->transactions->sum('amount'), 2, ',', '.') }}</p>
                 </div>
+                
+                <button class="btn btn-primary dropdown-toggle col-2 m-3 mt-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    Azioni Conto
+                </button>
             </div>
 
             <!-- Lista dei Movimenti -->
@@ -80,9 +82,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Pulsante per tornare indietro -->
-            <a href="{{ route('conti.index',$type) }}" class="btn btn-secondary mt-4">Indietro</a>
         </div>
     </div>
 </div>
