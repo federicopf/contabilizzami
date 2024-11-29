@@ -43,7 +43,7 @@
                     <p><strong>Saldo Attuale:</strong> {{ number_format($account->transactions->sum('amount'), 2, ',', '.') }}</p>
                 </div>
                 
-                <button class="btn btn-primary dropdown-toggle col-2 m-3 mt-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-primary dropdown-toggle m-3 mt-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                     Azioni Conto
                 </button>
             </div>
