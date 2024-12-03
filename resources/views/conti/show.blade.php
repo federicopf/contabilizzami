@@ -88,7 +88,6 @@
 </div>
 
 <!-- Modal per Crea Nuova Transazione -->
-<!-- Modal per Crea Nuova Transazione -->
 <div class="modal fade" id="createTransactionModal" tabindex="-1" aria-labelledby="createTransactionModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -171,8 +170,7 @@
                         data: form.serialize(),
                         success: function(response) {
                             if (response.status) {
-                                // Rimuovi l'elemento dalla lista senza ricaricare
-                                form.closest('tr').remove();
+                                location.reload(); // Per esempio, ricarica la pagina
                             } else {
                                 alert(response.message || 'Errore durante l\'eliminazione.');
                             }
@@ -212,9 +210,10 @@
                 }
             });
         }
+
    
         // FINE GESTIONE CRUD ---------------- INIZIO SCRIPT PAGINA GENERICO
-        
+
         let debounceTimer;
 
         // Funzione per il debouncing

@@ -45,4 +45,15 @@
             </div>
         </div>
     </div>
+    
+    <script type="module">
+        $(document).ready(function () {
+            // Ricarica la pagina quando si torna indietro dal browser
+            window.addEventListener('popstate', function () {
+                if (window.location.pathname === '{{ route("conti.index", $type) }}') {
+                    location.reload();
+                }
+            });
+        });
+    </script>
 @endsection
