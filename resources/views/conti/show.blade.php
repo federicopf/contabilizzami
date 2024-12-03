@@ -151,6 +151,7 @@
 </div>
 
 <script type="module">
+        
      $(document).ready(function() {
         // Intercetta il submit delle form di creazione o trasferimento
         $('form[action*="store"], form[action*="transfer"]').on('submit', handleFormSubmission);
@@ -211,9 +212,9 @@
                 }
             });
         }
-    });
-
-    $(document).ready(function() {
+   
+        // FINE GESTIONE CRUD ---------------- INIZIO SCRIPT PAGINA GENERICO
+        
         let debounceTimer;
 
         // Funzione per il debouncing
