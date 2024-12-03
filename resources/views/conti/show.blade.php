@@ -152,6 +152,10 @@
 
 <script type="module">
     $(document).ready(function() {
+        history.replaceState(null, "", "{{ route('conti.index',$type) }}");
+    });
+
+    $(document).ready(function() {
         let debounceTimer;
 
         // Funzione per il debouncing

@@ -42,7 +42,9 @@ class TransactionController extends Controller
         $transaction->delete();
 
         // Reindirizza alla pagina precedente con un messaggio di successo
-        return redirect()->back()->with('success', 'Transazione eliminata con successo!');
+        return redirect()
+            ->route('conti.show', ['account' => $transaction->account->id])
+            ->with('success', 'Transazione eliminata con successo!');
     }
 
     /**
@@ -70,7 +72,9 @@ class TransactionController extends Controller
         Transaction::create($data);
 
         // Reindirizza alla pagina precedente con un messaggio di successo
-        return redirect()->back()->with('success', 'Transazione creata con successo!');
+        return redirect()
+                ->route('conti.show', ['account' => $account->id])
+                ->with('success', 'Transazione creata con successo!');
     }
 
     /**
@@ -117,7 +121,9 @@ class TransactionController extends Controller
         ]);
 
         // Reindirizza alla pagina precedente con un messaggio di successo
-        return redirect()->back()->with('success', 'Trasferimento creato con successo!');
+        return redirect()
+                ->route('conti.show', ['account' => $accountFrom->id])
+                ->with('success', 'Trasferimento creato con successo!');
     }
 
     public function suggestions(Request $request)
