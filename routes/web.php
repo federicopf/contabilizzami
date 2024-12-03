@@ -36,7 +36,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [TransactionController::class, 'store'])->name('store');
         Route::post('/transfer', [TransactionController::class, 'transfer'])->name('transfer');
         Route::delete('/{transaction}', [TransactionController::class, 'destroy'])->name('destroy');
-        Route::get('/suggestions', [TransactionController::class, 'suggestions'])->name('suggestions');
     });
 
     Route::prefix('stats')->as('stats.')->group(function () {
@@ -46,5 +45,12 @@ Route::middleware('auth')->group(function () {
     Route::prefix('api')->as('api.')->group(function () {
         Route::get('/stats/monthly/{year}', [StatsController::class, 'getStatsMonthly'])->name('getStatsMonthly');
         Route::get('/stats/yearly', [StatsController::class, 'getStatsYearly'])->name('getStatsYearly');
+
+        Route::prefix('transactions')->as('transactions.')->group(function () {
+            Route::get('/transactions/suggestions', [TransactionController::class, 'suggestions'])->name('suggestions');
+            Route::post('/store', [TransactionController::class, 'apiStore'])->name('store');
+            Route::post('/transfer', [TransactionController::class, 'apiTransfer'])->name('transfer');
+            Route::delete('/{transaction}', [TransactionController::class, 'apiDestroy'])->name('destroy');
+        });
     });
 });

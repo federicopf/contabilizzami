@@ -70,10 +70,10 @@
                                         <td>{{ $transaction->description }}</td>
                                         <td>{{ number_format($transaction->amount, 2, ',', '.') }}</td>
                                         <td class="text-end">
-                                            <form action="{{ route('transactions.destroy', ['transaction' => $transaction->id]) }}" method="POST" style="display: inline;">
+                                            <form action="{{ route('api.transactions.destroy', ['transaction' => $transaction->id]) }}" method="POST" style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Sei sicuro di voler eliminare questo movimento?')">Elimina</button>
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return true">Elimina</button>
                                             </form>
                                         </td>
                                     </tr>
@@ -97,7 +97,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('transactions.store') }}" method="POST">
+                <form action="{{ route('api.transactions.store') }}" method="POST">
                     @csrf
                     <input type="hidden" name="account_id" value="{{ $account->id }}">
                     <div class="mb-3">
@@ -126,7 +126,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('transactions.transfer') }}" method="POST">
+                <form action="{{ route('api.transactions.transfer') }}" method="POST">
                     @csrf
                     <input type="hidden" name="account_from_id" value="{{ $account->id }}">
                     <div class="mb-3">
@@ -151,6 +151,68 @@
 </div>
 
 <script type="module">
+     $(document).ready(function() {
+        // Intercetta il submit delle form di creazione o trasferimento
+        $('form[action*="store"], form[action*="transfer"]').on('submit', handleFormSubmission);
+
+        // Funzione per gestire l'eliminazione con AJAX
+        $(document).on('submit', 'form[action][method="POST"]', function(event) {
+            let form = $(this);
+            if (form.find('input[name="_method"]').val() === 'DELETE') {
+                event.preventDefault();
+
+                if (confirm('Sei sicuro di voler eliminare questa transazione?')) {
+                    let url = form.attr('action');
+
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        data: form.serialize(),
+                        success: function(response) {
+                            if (response.status) {
+                                // Rimuovi l'elemento dalla lista senza ricaricare
+                                form.closest('tr').remove();
+                            } else {
+                                alert(response.message || 'Errore durante l\'eliminazione.');
+                            }
+                        },
+                        error: function(xhr) {
+                            alert('Si è verificato un errore: ' + (xhr.responseJSON?.message || xhr.statusText));
+                        }
+                    });
+                }
+            }
+        });
+
+        // Funzione per gestire il submit delle form con AJAX
+        function handleFormSubmission(event) {
+            event.preventDefault();
+
+            let form = $(this);
+            let url = form.attr('action');
+            let method = form.attr('method') || 'POST'; // Default method is POST
+            let data = form.serialize();
+
+            $.ajax({
+                url: url,
+                type: method,
+                data: data,
+                success: function(response) {
+                    console.log(response);
+                    if (response.status) {
+                        // Aggiorna la pagina o esegui un refresh parziale
+                        location.reload(); // Per esempio, ricarica la pagina
+                    } else {
+                        alert(response.message || 'Errore durante l\'elaborazione della richiesta.');
+                    }
+                },
+                error: function(xhr) {
+                    alert('Si è verificato un errore: ' + (xhr.responseJSON?.message || xhr.statusText));
+                }
+            });
+        }
+    });
+
     $(document).ready(function() {
         let debounceTimer;
 
@@ -168,7 +230,7 @@
 
             if (description.length > 2) {
                 $.ajax({
-                    url: '{{ route("transactions.suggestions") }}',
+                    url: '{{ route("api.transactions.suggestions") }}',
                     method: 'GET',
                     data: {
                         query: description

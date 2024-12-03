@@ -145,4 +145,112 @@ class TransactionController extends Controller
         ]);
     }
 
+    /**
+     * Remove the specified transaction via API.
+     *
+     * @param  \App\Models\Transaction  $transaction
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function apiDestroy(Transaction $transaction)
+    {
+        if ($transaction->account->user_id !== auth()->id()) {
+            return response()->json(['status' => false, 'message' => 'Accesso negato'], 403);
+        }
+
+        $linkedTransactionId = TransactionTransfer::where('transaction_id', $transaction->id)
+            ->orWhere('linked_transaction_id', $transaction->id)
+            ->value('transaction_id') == $transaction->id
+            ? TransactionTransfer::where('transaction_id', $transaction->id)->value('linked_transaction_id')
+            : TransactionTransfer::where('linked_transaction_id', $transaction->id)->value('transaction_id');
+
+        if ($linkedTransactionId) {
+            $linkedTransaction = Transaction::find($linkedTransactionId);
+            if ($linkedTransaction) {
+                $linkedTransaction->delete();
+            }
+        }
+
+        $transaction->delete();
+
+        return response()->json([
+            'status' => true,
+            'data' => null,
+            'message' => 'Transazione eliminata con successo',
+        ]);
+    }
+
+    /**
+     * Store a new transaction via API.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function apiStore(Request $request)
+    {
+        $data = $request->validate([
+            'account_id' => 'required|exists:accounts,id',
+            'description' => 'required|string|max:255',
+            'amount' => 'required|numeric',
+        ]);
+
+        $account = Account::findOrFail($data['account_id']);
+        if ($account->user_id !== auth()->id()) {
+            return response()->json(['status' => false, 'message' => 'Accesso negato'], 403);
+        }
+
+        $transaction = Transaction::create($data);
+
+        return response()->json([
+            'status' => true,
+            'data' => $transaction->description,
+            'message' => 'Transazione creata con successo',
+        ]);
+    }
+    
+    /**
+     * Store a new transfer between accounts via API.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function apiTransfer(Request $request)
+    {
+        $data = $request->validate([
+            'account_from_id' => 'required|exists:accounts,id',
+            'account_to_id' => 'required|exists:accounts,id|different:account_from_id',
+            'amount' => 'required|numeric|min:0.01',
+        ]);
+
+        $accountFrom = Account::findOrFail($data['account_from_id']);
+        $accountTo = Account::findOrFail($data['account_to_id']);
+
+        if ($accountFrom->user_id !== auth()->id() || $accountTo->user_id !== auth()->id()) {
+            return response()->json(['status' => false, 'message' => 'Accesso negato'], 403);
+        }
+
+        $transactionFrom = Transaction::create([
+            'account_id' => $accountFrom->id,
+            'description' => '',
+            'amount' => -$data['amount'],
+        ]);
+
+        $transactionTo = Transaction::create([
+            'account_id' => $accountTo->id,
+            'description' => 'Ricezione da ' . $accountFrom->name,
+            'amount' => $data['amount'],
+        ]);
+
+        TransactionTransfer::insert([
+            'transaction_id' => $transactionFrom->id,
+            'linked_transaction_id' => $transactionTo->id,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'data' => $transactionTo->description,
+            'message' => 'Trasferimento creato con successo',
+        ]);
+    }
+
+
 }
