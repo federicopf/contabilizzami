@@ -39,7 +39,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('stats')->as('stats.')->group(function () {
-        Route::post('/generic', [StatsController::class, 'generic'])->name('generic');
+        Route::get('/total', [StatsController::class, 'total'])->name('total');
     });
 
     Route::prefix('api')->as('api.')->group(function () {

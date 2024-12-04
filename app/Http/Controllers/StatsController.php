@@ -11,8 +11,10 @@ use Illuminate\Http\Request;
 
 class StatsController extends Controller
 {
-    public function generic(){
-
+    public function total(){
+        return view(
+            'stats.total'
+        );
     }
     
     public function getStatsMonthly($year)
