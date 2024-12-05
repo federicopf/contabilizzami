@@ -107,12 +107,12 @@ class ApiStatsController extends Controller
         return response()->json($stats);
     }
 
-    
     public function getStatsMonthlyTotal($year)
     {
-        // Query SQL per calcolare entrate e uscite mensili escludendo le transazioni interne
+        // Query SQL per ottenere tutte le transazioni fino alla fine dell'anno richiesto
         $query = "
             SELECT 
+                YEAR(t.created_at) AS year,
                 MONTH(t.created_at) AS month,
                 SUM(t.amount) AS totale
             FROM transactions t
@@ -121,32 +121,39 @@ class ApiStatsController extends Controller
             WHERE 
                 tt1.transaction_id IS NULL
                 AND tt2.linked_transaction_id IS NULL
-                AND YEAR(t.created_at) = ?
-            GROUP BY MONTH(t.created_at)
-            ORDER BY MONTH(t.created_at)
+                AND YEAR(t.created_at) <= ?
+            GROUP BY YEAR(t.created_at), MONTH(t.created_at)
+            ORDER BY YEAR(t.created_at), MONTH(t.created_at)
         ";
 
         // Esegui la query con il parametro dell'anno
         $transactions = DB::select($query, [$year]);
 
-        // Inizializza i dati con 12 mesi vuoti
-        $stats = [
-            'totale' => array_fill(0, 12, 0),
-        ];
+        // Inizializza i dati con 12 mesi vuoti (0 per tutti i mesi da gennaio a dicembre)
+        $stats = array_fill(0, 12, "0.00"); // Valori iniziali come stringhe per mantenere il formato JSON
+
+        // Variabile per il totale cumulativo
+        $cumulativeTotal = 0;
 
         // Popola i dati mese per mese
         foreach ($transactions as $transaction) {
-            $monthIndex = $transaction->month - 1; // Indici da 0 (gennaio) a 11 (dicembre)
-            $stats['totale'][$monthIndex] = $transaction->totale;
+            // Calcola il totale cumulativo fino al mese corrente
+            $cumulativeTotal += $transaction->totale;
+
+            // Aggiorna il saldo cumulativo per il mese corrente (solo per l'anno richiesto)
+            if ($transaction->year == $year) {
+                $monthIndex = $transaction->month - 1; // Indici da 0 (gennaio) a 11 (dicembre)
+                $stats[$monthIndex] = number_format($cumulativeTotal, 2, '.', ''); // Formattato con 2 decimali
+            }
         }
 
-        // Restituisci i dati come JSON
-        return response()->json($stats);
+        // Restituisci i dati nel formato desiderato
+        return response()->json(['totale' => $stats]);
     }
 
     public function getStatsYearlyTotal()
     {
-        // Query SQL per calcolare entrate e uscite annuali escludendo le transazioni interne
+        // Query SQL per ottenere tutte le transazioni fino all'anno corrente
         $query = "
             SELECT 
                 YEAR(t.created_at) AS year,
@@ -160,39 +167,27 @@ class ApiStatsController extends Controller
             GROUP BY YEAR(t.created_at)
             ORDER BY YEAR(t.created_at)
         ";
-    
+
         // Esegui la query
         $transactions = DB::select($query);
 
-        // Inizializza gli array per entrate e uscite
-        $stats = [
-            'entrate' => [],
-            'uscite' => [],
-        ];
+        // Inizializza il totale cumulativo e l'array dei risultati
+        $cumulativeTotal = 0;
+        $stats = [];
 
-        if(empty($transactions)){
-            return response()->json($stats);
-        }
-
-        // Popola i dati per ogni anno
+        // Popola i dati anno per anno
         foreach ($transactions as $transaction) {
-            $yearIndex = $transaction->year; // Usa l'anno come indice
-            $stats['totale'][$yearIndex] = $transaction->totale;
-        }
+            // Calcola il totale cumulativo
+            $cumulativeTotal += $transaction->totale;
 
-        // Assicura che tutti gli anni intermedi siano inclusi con valori di default (0)
-        $minYear = min(array_keys($stats['totale']));
-        $maxYear = max(array_keys($stats['totale']));
-
-        for ($year = $minYear; $year <= $maxYear; $year++) {
-            if (!isset($stats['totale'][$year])) {
-                $stats['totale'][$year] = 0;
-            }
+            // Aggiungi il saldo cumulativo per l'anno corrente
+            $stats[$transaction->year] = $cumulativeTotal;
         }
 
         // Restituisci i dati come JSON
-        return response()->json($stats);
+        return response()->json(['totale' => $stats]);
     }
+
 
 }
 

@@ -4,6 +4,7 @@
 
 <div class="container">
     <!-- Seconda sezione: statistiche mensili e annuali -->
+    <h4>Statistiche totale saldo</h4>
     <div class="row justify-content-center mb-4">
         <!-- Statistiche mensili -->
         <div class="col-md-6">
