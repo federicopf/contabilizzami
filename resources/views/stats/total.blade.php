@@ -40,7 +40,79 @@
 @vite('resources/js/charts/total.js')
 
 <script type="module">
+
     
+let currentYear = new Date().getFullYear();
+    $(document).ready(function () {
+        //ON LAUNCH
+        initMonthlyStats();
+        initYearlyStats();
+
+        //BINDIGS 
+        $('#currentYear').text(currentYear);
+
+        $('#prevYear').click(function () {
+            changeYearMonthlyStatsChart(-1);
+        });
+
+        $('#nextYear').click(function () {
+            changeYearMonthlyStatsChart(1);
+        });
+
+        //FUNCTIONS
+        function initYearlyStats(){
+            updateYearlyStatsChart();
+        }
+
+        function initMonthlyStats(){
+            changeYearMonthlyStatsChart(0);
+        }
+
+        function changeYearMonthlyStatsChart(direction) {
+            currentYear += direction;
+            $('#currentYear').text(currentYear);
+
+            updateMonthlyStatsChart(currentYear);
+        }
+
+        function updateMonthlyStatsChart(year) {
+            $.ajax({
+                url: `/api/statstotal/monthly/${year}`,
+                method: 'GET',
+                success: function (response) {
+                    // Aggiorna i dati del grafico
+                    const chart = window.monthlyTotalChart;
+
+                    if (chart) {
+                        chart.data.datasets[0].data = response.totale;
+                        chart.update();
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Errore nel recupero dei dati:', xhr.responseJSON?.error || xhr.statusText);
+                }
+            });
+        }
+
+        function updateYearlyStatsChart() {
+            $.ajax({
+                url: `/api/statstotal/yearly`,
+                method: 'GET',
+                success: function (response) {
+                    // Aggiorna i dati del grafico
+                    const chart = window.yearlyTotalChart;
+
+                    if (chart) {
+                        chart.data.datasets[0].data = response.totale;
+                        chart.update();
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Errore nel recupero dei dati:', xhr.responseJSON?.error || xhr.statusText);
+                }
+            });
+        }
+    });
 </script>
 
 @endsection

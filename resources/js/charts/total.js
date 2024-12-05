@@ -10,13 +10,9 @@ window.monthlyTotalChart = new Chart(ctxMonthly, {
     data: {
         labels: ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'],
         datasets: [{
-            label: 'Entrate',
+            label: 'Totale',
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            backgroundColor: 'rgba(75, 192, 192, 0.6)',
-        }, {
-            label: 'Uscite',
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+            backgroundColor: '#2470e2a9',
         }]
     },
     options: {
@@ -36,13 +32,9 @@ window.yearlyTotalChart = new Chart(ctxAnnual, {
     data: {
         labels: [''+(year-4), ''+(year-3), ''+(year-2), ''+(year-1), ''+(year)],
         datasets: [{
-            label: 'Entrate',
+            label: 'Totale',
             data: [0, 0, 0, 0, 0],
-            backgroundColor: 'rgba(75, 192, 192, 0.6)',
-        }, {
-            label: 'Uscite',
-            data: [0, 0, 0, 0, 0],
-            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+            backgroundColor: '#2470e2a9',
         }]
     },
     options: {

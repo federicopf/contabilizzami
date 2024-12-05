@@ -138,7 +138,7 @@
 
         function updateMonthlyStatsChart(year) {
             $.ajax({
-                url: `/api/stats/monthly/${year}`,
+                url: `/api/statsinout/monthly/${year}`,
                 method: 'GET',
                 success: function (response) {
                     // Aggiorna i dati del grafico
@@ -158,7 +158,7 @@
 
         function updateYearlyStatsChart() {
             $.ajax({
-                url: `/api/stats/yearly`,
+                url: `/api/statsinout/yearly`,
                 method: 'GET',
                 success: function (response) {
                     // Aggiorna i dati del grafico

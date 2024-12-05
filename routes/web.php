@@ -4,6 +4,8 @@ use App\Http\Controllers\StatsController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\TransactionController;
 
+use App\Http\Controllers\Api\ApiStatsController;
+
 use Illuminate\Support\Facades\Route;
 
 //BASIC AND AUTH
@@ -43,8 +45,10 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('api')->as('api.')->group(function () {
-        Route::get('/stats/monthly/{year}', [StatsController::class, 'getStatsMonthly'])->name('getStatsMonthly');
-        Route::get('/stats/yearly', [StatsController::class, 'getStatsYearly'])->name('getStatsYearly');
+        Route::get('/statsinout/monthly/{year}', [ApiStatsController::class, 'getStatsMonthlyInOut'])->name('getStatsMonthlyInOut');
+        Route::get('/statsinout/yearly', [ApiStatsController::class, 'getStatsYearlyInOut'])->name('getStatsYearlyInOut');
+        Route::get('/statstotal/monthly/{year}', [ApiStatsController::class, 'getStatsMonthlyTotal'])->name('getStatsMonthlyTotal');
+        Route::get('/statstotal/yearly', [ApiStatsController::class, 'getStatsYearlyTotal'])->name('getStatsYearlyTotal');
 
         Route::prefix('transactions')->as('transactions.')->group(function () {
             Route::get('/transactions/suggestions', [TransactionController::class, 'suggestions'])->name('suggestions');
