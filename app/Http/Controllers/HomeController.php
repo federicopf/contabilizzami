@@ -28,7 +28,7 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {
+    {   
         // Recupera i conti dell'utente autenticato
         $accounts = auth()->user()->accounts()->with('transactions')->get();
 

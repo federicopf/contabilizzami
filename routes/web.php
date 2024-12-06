@@ -3,17 +3,20 @@
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\SuperadminController;
 
 use App\Http\Controllers\Api\ApiStatsController;
+
+
+use App\Http\Middleware\SuperAdmin;
 
 use Illuminate\Support\Facades\Route;
 
 //BASIC AND AUTH
-
 Auth::routes(['register' => false, 'reset' => false]);
 //Auth::routes();
 
-//CONTI
+//CONTABILIZZAMI
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
         return redirect('home');
@@ -43,13 +46,23 @@ Route::middleware('auth')->group(function () {
     Route::prefix('stats')->as('stats.')->group(function () {
         Route::get('/total', [StatsController::class, 'total'])->name('total');
     });
+});
 
+//SUPERADMIN
+Route::middleware(SuperAdmin::class)->group(function () {
+    Route::prefix('superadmin')->as('superadmin.')->group(function () {
+        Route::get('/', [SuperadminController::class, 'index'])->name('index');
+    });
+});
+
+//API
+Route::middleware('auth')->group(function () {
     Route::prefix('api')->as('api.')->group(function () {
         Route::get('/statsinout/monthly/{year}', [ApiStatsController::class, 'getStatsMonthlyInOut'])->name('getStatsMonthlyInOut');
         Route::get('/statsinout/yearly', [ApiStatsController::class, 'getStatsYearlyInOut'])->name('getStatsYearlyInOut');
         Route::get('/statstotal/monthly/{year}', [ApiStatsController::class, 'getStatsMonthlyTotal'])->name('getStatsMonthlyTotal');
         Route::get('/statstotal/yearly', [ApiStatsController::class, 'getStatsYearlyTotal'])->name('getStatsYearlyTotal');
-
+    
         Route::prefix('transactions')->as('transactions.')->group(function () {
             Route::get('/transactions/suggestions', [TransactionController::class, 'suggestions'])->name('suggestions');
             Route::post('/store', [TransactionController::class, 'apiStore'])->name('store');
