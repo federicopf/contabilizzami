@@ -4,9 +4,9 @@ use App\Http\Controllers\StatsController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SuperadminController;
+use App\Http\Controllers\SuperadminUserController;
 
 use App\Http\Controllers\Api\ApiStatsController;
-
 
 use App\Http\Middleware\SuperAdmin;
 
@@ -52,8 +52,18 @@ Route::middleware('auth')->group(function () {
 Route::middleware(SuperAdmin::class)->group(function () {
     Route::prefix('superadmin')->as('superadmin.')->group(function () {
         Route::get('/', [SuperadminController::class, 'index'])->name('index');
+        Route::prefix('users')->as('users.')->group(function () {
+            Route::get('/', [SuperadminUserController::class, 'index'])->name('index');
+            Route::get('create', [SuperadminUserController::class, 'create'])->name('create');
+            Route::post('store', [SuperadminUserController::class, 'store'])->name('store');
+            Route::get('{user}/edit', [SuperadminUserController::class, 'edit'])->name('edit');
+            Route::put('{user}', [SuperadminUserController::class, 'update'])->name('update');
+            Route::get('{user}', [SuperadminUserController::class, 'show'])->name('show');
+            Route::delete('{user}', [SuperadminUserController::class, 'destroy'])->name('destroy');
+        });
     });
 });
+
 
 //API
 Route::middleware('auth')->group(function () {
