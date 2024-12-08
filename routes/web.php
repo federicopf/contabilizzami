@@ -58,7 +58,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(SuperAdmin::class)->group(function () {
     Route::prefix('superadmin')->as('superadmin.')->group(function () {
         Route::prefix('users')->as('users.')->group(function () {
-            // TODO Superadmin gestione utenti (P.2)
+            // TODO Superadmin gestione utenti (P.1)
             Route::get('/', [SuperadminUserController::class, 'index'])->name('index');
             Route::get('create', [SuperadminUserController::class, 'create'])->name('create');
             Route::post('store', [SuperadminUserController::class, 'store'])->name('store');
