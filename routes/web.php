@@ -5,6 +5,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SuperadminController;
 use App\Http\Controllers\SuperadminUserController;
+use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\Api\ApiStatsController;
 
@@ -46,13 +47,18 @@ Route::middleware('auth')->group(function () {
     Route::prefix('stats')->as('stats.')->group(function () {
         Route::get('/total', [StatsController::class, 'total'])->name('total');
     });
+
+    Route::prefix('profile')->as('profile.')->group(function () {
+        Route::put('password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    });
+    
 });
 
 //SUPERADMIN
 Route::middleware(SuperAdmin::class)->group(function () {
     Route::prefix('superadmin')->as('superadmin.')->group(function () {
-        Route::get('/', [SuperadminController::class, 'index'])->name('index');
         Route::prefix('users')->as('users.')->group(function () {
+            // TODO Superadmin gestione utenti (P.2)
             Route::get('/', [SuperadminUserController::class, 'index'])->name('index');
             Route::get('create', [SuperadminUserController::class, 'create'])->name('create');
             Route::post('store', [SuperadminUserController::class, 'store'])->name('store');

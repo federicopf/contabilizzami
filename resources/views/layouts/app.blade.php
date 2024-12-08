@@ -22,6 +22,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
+
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
@@ -98,10 +99,14 @@
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     @if(Auth::user()->superadmin)
-                                    <a class="dropdown-item" href="{{ route('superadmin.index') }}">
-                                        Amministrazione
-                                    </a>
+                                        <a class="dropdown-item" href="{{ route('superadmin.users.index') }}">
+                                            Amministrazione
+                                        </a>
                                     @endif
+
+                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#passwordEditModal">
+                                        Recupera password
+                                    </a>
 
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
@@ -121,8 +126,21 @@
         </nav>
 
         <main class="py-4">
+
+            @if ($errors->any())
+                <div class="alert alert-danger m-4">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li> 
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             @yield('content')
         </main>
+
+        @include('layouts.change_password_modal')
     </div>
 
 </body>

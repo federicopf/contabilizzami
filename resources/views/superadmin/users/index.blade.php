@@ -17,12 +17,12 @@
         <div class="mb-4 col-12 col-md-4">
             <label for="userFilter" class="form-label">Seleziona tipo di utente:</label>
             <select id="userFilter" class="form-select border-secondary">
-                <option value="0">Utente</option>
-                <option value="1">Superadmin</option>
+                <option value="0" {{ request('superadmin') == '0' ? 'selected' : '' }}>Utente</option>
+                <option value="1" {{ request('superadmin') == '1' ? 'selected' : '' }}>Superadmin</option>
             </select>
         </div>
-    </div>
-
+    </div>    
+    
     <!-- Tabella -->
     <table class="table table-striped">
         <thead class="table-primary">
@@ -33,33 +33,31 @@
             </tr>
         </thead>
         <tbody id="userTable">
-            <tr data-type="0">
-                <td>1</td>
-                <td>Mario Rossi</td>
-                <td>Utente</td>
-            </tr>
-            <tr data-type="0">
-                <td>3</td>
-                <td>Anna Verdi</td>
-                <td>Utente</td>
-            </tr>
+            @forelse ($users as $user)
+                <tr data-type="{{ $user->type }}">
+                    <td>{{ $user->id }}</td>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->type == 0 ? 'Utente' : 'Superadmin' }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="3" class="text-center">Nessun utente trovato.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
+
 </div>
 
 <script>
-    document.getElementById('userFilter').addEventListener('change', function () {
-        const filterValue = this.value;
-        const rows = document.querySelectorAll('#userTable tr');
-
-        rows.forEach(row => {
-            const type = row.getAttribute('data-type');
-            if (filterValue === "" || filterValue === type) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none";
-            }
+    $(document).ready(function () {
+        $('#userFilter').on('change', function () {
+            let selectedType = $(this).val();
+            let currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set('superadmin', selectedType);
+            window.location.href = currentUrl.toString();
         });
     });
 </script>
+
 @endsection

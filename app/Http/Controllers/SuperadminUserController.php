@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+
 use Illuminate\Http\Request;
 
 class SuperadminUserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Mostra la lista degli utenti
-        return view('superadmin.users.index', [
-            'users' => [
-                ['id' => 1, 'name' => 'Mario Rossi', 'type' => 'Utente'],
-                ['id' => 2, 'name' => 'Luigi Bianchi', 'type' => 'Superadmin'],
-                ['id' => 3, 'name' => 'Anna Verdi', 'type' => 'Utente'],
-            ]
-        ]);
+        $type = $request->query('superadmin', '0'); // Imposta il valore predefinito a '0' se non è passato nel parametro GET
+    
+        // Query per ottenere gli utenti in base al tipo
+        $users = User::where('superadmin', $type)->get();
+    
+        return view('superadmin.users.index', ['users' => $users]);
     }
 
     public function create()
