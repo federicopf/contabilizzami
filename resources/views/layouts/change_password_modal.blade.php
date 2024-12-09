@@ -1,4 +1,3 @@
-<!-- Modal Modifica Password -->
 <div class="modal fade" id="passwordEditModal" tabindex="-1" aria-labelledby="passwordEditModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
