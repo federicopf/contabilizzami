@@ -8,7 +8,7 @@
             <p class="text-muted">Visualizza e gestisci i tuoi utenti</p>
         </div>
         <div class="col-md-3 text-end">
-            <a class="btn btn-primary">+ Aggiungi Utente</a>
+            <a href="{{ route('superadmin.users.create') }}" class="btn btn-primary">+ Aggiungi Utente</a>
         </div>
     </div>
     
