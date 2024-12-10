@@ -140,7 +140,9 @@
             @yield('content')
         </main>
 
-        @include('layouts.change_password_modal')
+        @auth
+            @include('layouts.change_password_modal')
+        @endauth
     </div>
 
 </body>

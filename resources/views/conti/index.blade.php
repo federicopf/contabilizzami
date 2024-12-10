@@ -32,7 +32,7 @@
                         </thead>
                         <tbody>
                             @foreach($accounts as $account)
-                                <tr onclick="window.location='{{ route('conti.show', $account->id) }}'" style="cursor: pointer;">
+                                <tr role="button" onclick="window.location='{{ route('conti.show', $account->id) }}'" style="cursor: pointer;">
                                     <td>{{ $account->name }}</td>
                                     <td class="d-none d-md-table-cell">{{ $account->getTypeNameAttribute() }}</td>
                                     <td>{{ number_format($account->transactions->sum('amount'), 2, ',', '.') }}</td>

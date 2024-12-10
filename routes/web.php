@@ -61,11 +61,11 @@ Route::middleware(SuperAdmin::class)->group(function () {
             Route::get('/', [SuperadminUserController::class, 'index'])->name('index');
             Route::get('create', [SuperadminUserController::class, 'create'])->name('create');
             Route::post('store', [SuperadminUserController::class, 'store'])->name('store');
-            // TODO Superadmin gestione utenti (P.1)
+            Route::get('{user}', [SuperadminUserController::class, 'show'])->name('show');
             Route::get('{user}/edit', [SuperadminUserController::class, 'edit'])->name('edit');
             Route::put('{user}', [SuperadminUserController::class, 'update'])->name('update');
-            Route::get('{user}', [SuperadminUserController::class, 'show'])->name('show');
             Route::delete('{user}', [SuperadminUserController::class, 'destroy'])->name('destroy');
+            // TODO Facciamo anche un reset passwoord, poi si forka (P.1)
         });
     });
 });

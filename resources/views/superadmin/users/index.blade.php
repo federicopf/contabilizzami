@@ -34,7 +34,7 @@
         </thead>
         <tbody id="userTable">
             @forelse ($users as $user)
-                <tr data-type="{{ $user->type }}">
+                <tr role="button" onclick="window.location='{{ route('superadmin.users.show', $user->id) }}'" data-type="{{ $user->type }}">
                     <td>{{ $user->id }}</td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->type == 0 ? 'Utente' : 'Superadmin' }}</td>
