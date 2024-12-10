@@ -2,6 +2,13 @@
 
 @section('content')
 <div class="container">
+    <!-- Messaggi di successo -->
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <!-- Pulsante 'Torna alla Lista' in alto a sinistra -->
     <div class="mb-3">
         <a href="{{ route('superadmin.users.index') }}" class="btn btn-secondary">Torna alla Lista</a>
@@ -29,7 +36,10 @@
     <div class="d-flex justify-content-between">
         <div>
             <a href="{{ route('superadmin.users.edit', $user->id) }}" class="btn btn-warning">Modifica Utente</a>
-            <a href="#" class="btn btn-info">Resetta Password</a>
+            <form action="{{ route('superadmin.users.reset-password', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Sei sicuro di voler resettare la password?');">
+                @csrf
+                <button type="submit" class="btn btn-info">Resetta Password</button>
+            </form>
         </div>
         <form action="{{ route('superadmin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Sei sicuro di voler eliminare questo utente?');">
             @csrf

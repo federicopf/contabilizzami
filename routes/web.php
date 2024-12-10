@@ -65,7 +65,7 @@ Route::middleware(SuperAdmin::class)->group(function () {
             Route::get('{user}/edit', [SuperadminUserController::class, 'edit'])->name('edit');
             Route::put('{user}', [SuperadminUserController::class, 'update'])->name('update');
             Route::delete('{user}', [SuperadminUserController::class, 'destroy'])->name('destroy');
-            // TODO Facciamo anche un reset passwoord, poi si forka (P.1)
+            Route::post('{user}/reset-password', [SuperadminUserController::class, 'resetPassword'])->name('reset-password');
         });
     });
 });

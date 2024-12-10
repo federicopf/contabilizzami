@@ -108,4 +108,18 @@ class SuperadminUserController extends Controller
         return redirect()->route('superadmin.users.index')
             ->with('success', 'Utente eliminato con successo.');
     }
+
+    public function resetPassword(User $user)
+    {
+        // Genera una nuova password temporanea
+        $temporaryPassword = Str::random(12);
+
+        // Aggiorna la password dell'utente
+        $user->password = Hash::make($temporaryPassword);
+        $user->save();
+
+        // Reindirizza alla schermata di dettaglio con la nuova password
+        return redirect()->route('superadmin.users.show', $user->id)
+            ->with('success', 'La password è stata resettata con successo. La nuova password è: ' . $temporaryPassword);
+    }
 }
