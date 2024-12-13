@@ -1,7 +1,10 @@
 #!/bin/bash
 
+echo "Starting Docker daemon in the foreground..."
+pkill docker
+sleep 5
+
 if ! pgrep -x "dockerd" > /dev/null; then
-    echo "Starting Docker daemon in the foreground..."
     dockerd &
     DOCKER_PID=$!
 
