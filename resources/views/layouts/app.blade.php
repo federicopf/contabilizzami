@@ -105,7 +105,7 @@
                                     @endif
 
                                     <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#passwordEditModal">
-                                        Recupera password
+                                        Cambia password
                                     </a>
 
                                     <a class="dropdown-item" href="{{ route('logout') }}"
