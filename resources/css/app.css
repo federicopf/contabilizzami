@@ -1,0 +1,9 @@
+.text_green_bold{
+    font-weight: bold;
+    color: green !important;
+}
+
+.text_red_bold {
+    font-weight: bold;
+    color: red !important;
+}

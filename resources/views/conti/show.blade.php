@@ -40,7 +40,12 @@
                 <div class="card-body">
                     <p><strong>Nome del Conto:</strong> {{ $account->name }}</p>
                     <p><strong>Tipo di Conto:</strong>  {{ $account->getTypeNameAttribute() }}</p>
-                    <p><strong>Saldo Attuale:</strong> {{ number_format($account->transactions->sum('amount'), 2, ',', '.') }}</p>
+                    <div class="d-flex">
+                        <strong class="me-1">Saldo Attuale:</strong> 
+                        <div class="{{ ($account->transactions->sum('amount') > 0) ? 'text_green_bold' : 'text_red_bold' }}">
+                            {{ number_format($account->transactions->sum('amount'), 2, ',', '.') }}
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -68,7 +73,7 @@
                                     <tr>
                                         <td class="d-none d-md-table-cell">{{ $transaction->created_at->format('Y-m-d') }}</td>
                                         <td>{{ $transaction->description }}</td>
-                                        <td>{{ number_format($transaction->amount, 2, ',', '.') }}</td>
+                                        <td  class="{{ ($transaction->amount > 0) ? 'text_green_bold' : 'text_red_bold' }}">{{ number_format($transaction->amount, 2, ',', '.') }}</td>
                                         <td class="text-end">
                                             <form action="{{ route('api.transactions.destroy', ['transaction' => $transaction->id]) }}" method="POST" style="display: inline;">
                                                 @csrf
