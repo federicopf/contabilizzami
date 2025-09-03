@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\Services\ProfileServiceInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
+    protected $profileService;
+
+    public function __construct(ProfileServiceInterface $profileService)
+    {
+        $this->profileService = $profileService;
+    }
+
     /**
      * Aggiorna la password dell'utente autenticato.
      *
@@ -25,12 +32,9 @@ class ProfileController extends Controller
             'password.confirmed' => 'Le password non corrispondono.',
         ]);
 
-        // Recupera l'utente autenticato
+        // Recupera l'utente autenticato e aggiorna la password
         $user = Auth::user();
-
-        // Aggiorna la password
-        $user->password = Hash::make($request->password);
-        $user->save();
+        $this->profileService->updatePassword($user, $request->password);
 
         // Messaggio di successo e redirect
         return redirect()->back()->with('success', 'La password è stata aggiornata con successo.');
