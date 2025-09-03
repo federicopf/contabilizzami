@@ -22,7 +22,7 @@
   All account types are managed from a single view with filterable types and status.
 
 - 🧩 **Modular structure**  
-  Easy to extend with new features, categories, reports, and more.
+  Clean architecture with service layer and dependency injection for easy extension and maintenance.
 
 ---
 
@@ -44,3 +44,18 @@ composer install
 
 ./vendor/bin/sail npm install
 ./vendor/bin/sail npm run dev
+
+## 🏗️ Architecture
+
+The application follows a clean architecture pattern with:
+
+- **Service Layer**: Business logic is separated into dedicated services
+- **Dependency Injection**: Services are injected into controllers via interfaces
+- **Repository Pattern**: Data access is abstracted through service interfaces
+- **Single Responsibility**: Each component has a clear, focused purpose
+
+This architecture ensures:
+- Easy testing and maintenance
+- Code reusability across different contexts
+- Clear separation of concerns
+- Scalable and extensible codebase
